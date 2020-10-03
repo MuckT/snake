@@ -23,7 +23,7 @@ func _ready():
 	# 2. **COME BACK TO THIS** Create obstacles 
 	
 	# Create Player
-	$Player.start($StartPosition.position)
+	$Player.start($Player/StartPosition.position)
 
 func is_cell_vacant(pos, direction):
 	# Return true if the cell is vacant, else false

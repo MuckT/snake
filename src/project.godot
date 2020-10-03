@@ -23,7 +23,6 @@ config/icon="res://icon.png"
 
 window/size/width=480
 window/size/height=720
-window/emulate_touch_from_mouse=false
 
 [input_devices]
 
