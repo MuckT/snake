@@ -21,7 +21,9 @@ func _ready():
 			grid.append([])
 			
 	# 2. **COME BACK TO THIS** Create obstacles 
-
+	
+	# Create Player
+	$Player.start($StartPosition.position)
 
 func is_cell_vacant(pos, direction):
 	# Return true if the cell is vacant, else false
