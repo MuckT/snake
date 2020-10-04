@@ -40,7 +40,6 @@ func _input(event):
 		target = event.position
 		current_position = get_position()
 		radians =  current_position.angle_to_point(target)
-		print(radians)
 		if radians < PI/4 and radians >= -PI/4:
 			set_direction =  'left'
 		elif radians < -PI/4 and radians >= -3 * PI/4:
