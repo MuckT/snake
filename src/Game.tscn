@@ -36,3 +36,8 @@ shape = SubResource( 1 )
 
 [node name="StartPosition" type="Position2D" parent="Grid/Player"]
 position = Vector2( 20, 20 )
+
+[node name="Timer" type="Timer" parent="Grid/Player"]
+wait_time = 0.25
+autostart = true
+[connection signal="timeout" from="Grid/Player/Timer" to="Grid/Player" method="_on_Timer_timeout"]
