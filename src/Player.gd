@@ -61,18 +61,28 @@ func _input(event):
 			move('right')
 	
 	# Mouse W,A,S,D - Arrow key movement
-	if Input.is_action_pressed("ui_right"):
+	if Input.is_action_just_pressed("ui_right"):
 		move("right")
 		print(event)
-	if Input.is_action_pressed("ui_down"):
+	if Input.is_action_just_pressed("ui_down"):
 		move("down")
 		print(event)
-	if Input.is_action_pressed("ui_left"):
+	if Input.is_action_just_pressed("ui_left"):
 		move("left")
 		print(event)
-	if Input.is_action_pressed("ui_up"):
+	if Input.is_action_just_pressed("ui_up"):
 		move("up")
 		print(event)
+		
+		
+func _process(delta):
+	position.x = clamp(position.x, 20, screen_size.x - 20)
+	position.y = clamp(position.y, 20, screen_size.y - 20)
+	
+func start(pos):
+	position = pos
+	show()
+	$CollisionShape2D.disabled = false
 #	if event.pressed == 'down':
 #		print('Move Down')
 #	for dir in inputs.keys():
@@ -113,7 +123,7 @@ func _input(event):
 		
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+#func _process(delta):
 #	var velocity = Vector2() # The player's movement vector.
 ##	# Move towards the target and stop when close.
 ##	if position.distance_to(target) > 10:
@@ -121,14 +131,9 @@ func _process(delta):
 ##	if velocity.length() > 0:
 ##		velocity = velocity.normalized() * speed
 #	position += velocity * delta
-	position.x = clamp(position.x, 20, screen_size.x - 20)
-	position.y = clamp(position.y, 20, screen_size.y - 20)
-	
-func start(pos):
-	position = pos
-	show()
-	$CollisionShape2D.disabled = false
-	
+#	position.x = clamp(position.x, 20, screen_size.x - 20)
+#	position.y = clamp(position.y, 20, screen_size.y - 20)
+#
 #func get_direction(target, current_position):
 #	print(str(current_position))
 #	print(str(target))
