@@ -2,7 +2,7 @@ extends TileMap
 
 var tile_size = get_cell_size()
 var half_tile_size = tile_size / 2
-var tile_y = 20
+var tile_y = 18
 var tile_x = 12
 
 enum ENTITY_TYPE {PLAYER, OBSTACLE, COLLECTIBLE}
@@ -10,7 +10,7 @@ enum ENTITY_TYPE {PLAYER, OBSTACLE, COLLECTIBLE}
 var grid_size = Vector2(tile_x,tile_y)
 var grid = []
 
-onready var Obstacle = preload("res://Obstacle.tscn")
+#onready var Collectible = preload("res://Collectible.tscn")
 
 
 func _ready():
@@ -24,6 +24,20 @@ func _ready():
 	
 	# Create Player
 	$Player.start($Player/StartPosition.position)
+	
+#	var position
+#	var placed = false
+#	while not placed:
+#		var grid_pos = Vector2(randi() % int(grid_size.x), randi() % int(grid_size.y))
+#		if not grid[grid_pos.x][grid_pos.y]:
+#			position = grid_pos
+#			placed = true
+#			
+#	var new_collectible = Collectible.instance()
+#	new_collectible.position = map_to_world(position) + half_tile_size
+#	grid[position.x][position.y] = ENTITY_TYPE[2]
+	
+	
 
 func is_cell_vacant(pos, direction):
 	# Return true if the cell is vacant, else false
