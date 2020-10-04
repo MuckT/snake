@@ -31,7 +31,6 @@ func move(dir):
 	
 # Change direction based on keypress or touche event whenever an event happens.
 func _input(event):
-	print(set_direction)
 	# Exit feature
 	if Input.is_action_pressed("ui_cancel"):
 		get_tree().quit()
@@ -40,21 +39,16 @@ func _input(event):
 	if event is InputEventScreenTouch and event.pressed:
 		target = event.position
 		current_position = get_position()
-		print("Direction")
 		radians =  current_position.angle_to_point(target)
 		print(radians)
 		if radians < PI/4 and radians >= -PI/4:
 			set_direction =  'left'
-			print('left')
 		elif radians < -PI/4 and radians >= -3 * PI/4:
 			set_direction =  'down'
-			print('down')
 		elif radians >= PI/4 and radians < 3 * PI/4:
 			set_direction =  'up'
-			print('up')
 		else:
 			set_direction =  'right'
-			print('right')
 
 	# Mouse W,A,S,D / Arrow key movement
 	if Input.is_action_just_pressed("ui_right"):
