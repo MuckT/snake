@@ -9,7 +9,9 @@ var screen_size  # Size of the game window.
 var target = Vector2()
 var current_position = Vector2()
 var raw_direction = Vector2()
-var degrees = float()
+var radians = float()
+
+
 
 # Declare member variables here. Examples:
 # var a = 2
@@ -28,23 +30,17 @@ func _input(event):
 		current_position = get_position()
 		print()
 		print("Direction")
-		degrees =  current_position.angle_to(target)
-		print(degrees)
-		raw_direction = polar2cartesian(float(current_position.distance_to(target)), float(current_position.angle_to(target)))
-#		degrees = raw_direction.de
-		print("Polar2cartesian:")
-		print(raw_direction)
-#		if degrees <= 180 and degrees > 90:
-#			print('right')
-#			print(degrees)
-#		if degrees > 180 and degrees <= 270:
-#			print('down')
-#			print(degrees)
-#		if degrees <= 90:
-#			print('up')
-#			print(degrees)
-#		if degrees > 270:
-#			print('left')
+		radians =  current_position.angle_to_point(target)
+		print(radians)
+	
+		if radians < PI/4 and radians >= -PI/4:
+			print('left')
+		elif radians < -PI/4 and radians >= -3 * PI/4:
+			print('down')
+		elif radians >= PI/4 and radians < 3 * PI/4:
+			print('up')
+		else:
+			print('right')
 #			print(degrees)
 
 		
