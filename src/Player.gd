@@ -1,13 +1,16 @@
 extends Area2D
 
 #signal hit
+var tile_size = 40
+var inputs = {"right": Vector2.RIGHT, "left": Vector2.LEFT, "up": Vector2.UP, "down": Vector2.DOWN}
 
-export var speed = 400  # How fast the player will move (pixels/sec).
+export var speed = 40  # How fast the player will move (pixels/sec).
 var screen_size  # Size of the game window.
 
 # Add this variable to hold the clicked position.
 var target = Vector2()
 var current_position = Vector2()
+var current_direction = Vector2()
 var raw_direction = Vector2()
 var radians = float()
 
@@ -22,9 +25,20 @@ var radians = float()
 func _ready():
 #	hide()
 	screen_size = get_viewport_rect().size
+	position = position.snapped(Vector2.ONE * tile_size)
+	position += Vector2.ONE * tile_size/2
+	
+#func _unhandled_input(event):
+#	for dir in inputs.keys():
+#		if event.is_action_pressed(dir):
+#			move(dir)
+
+func move(dir):
+	position += inputs[dir] * tile_size
 	
 # Change the target whenever a touch event happens.
 func _input(event):
+	# Touch screen and mouse click movement using radians
 	if event is InputEventScreenTouch and event.pressed:
 		target = event.position
 		current_position = get_position()
@@ -35,12 +49,57 @@ func _input(event):
 	
 		if radians < PI/4 and radians >= -PI/4:
 			print('left')
+			move('left')
 		elif radians < -PI/4 and radians >= -3 * PI/4:
 			print('down')
+			move('down')
 		elif radians >= PI/4 and radians < 3 * PI/4:
 			print('up')
+			move('up')
 		else:
 			print('right')
+			move('right')
+	
+	# Mouse W,A,S,D - Arrow key movement
+	if Input.is_action_pressed("ui_right"):
+		move("right")
+		print(event)
+	if Input.is_action_pressed("ui_down"):
+		move("down")
+		print(event)
+	if Input.is_action_pressed("ui_left"):
+		move("left")
+		print(event)
+	if Input.is_action_pressed("ui_up"):
+		move("up")
+		print(event)
+#	if event.pressed == 'down':
+#		print('Move Down')
+#	for dir in inputs.keys():
+#		if event.is_action_pressed(dir):
+#			move(dir)
+#	if event is InputEventScreenTouch and event.pressed:
+#		target = event.position
+#		current_position = get_position()
+#		print()
+#		print("Direction")
+#		degrees =  current_position.angle_to(target)
+#		print(degrees)
+#		raw_direction = polar2cartesian(float(current_position.distance_to(target)), float(current_position.angle_to(target)))
+##		degrees = raw_direction.de
+#		print("Polar2cartesian:")
+#		print(raw_direction)
+#		if degrees <= 180 and degrees > 90:
+#			print('right')
+#			print(degrees)
+#		if degrees > 180 and degrees <= 270:
+#			print('down')
+#			print(degrees)
+#		if degrees <= 90:
+#			print('up')
+#			print(degrees)
+#		if degrees > 270:
+#			print('left')
 #			print(degrees)
 
 		
@@ -55,15 +114,15 @@ func _input(event):
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	var velocity = Vector2() # The player's movement vector.
-	# Move towards the target and stop when close.
-	if position.distance_to(target) > 10:
-		velocity = target - position
-	if velocity.length() > 0:
-		velocity = velocity.normalized() * speed
-	position += velocity * delta
-	position.x = clamp(position.x, 0, screen_size.x)
-	position.y = clamp(position.y, 0, screen_size.y)
+#	var velocity = Vector2() # The player's movement vector.
+##	# Move towards the target and stop when close.
+##	if position.distance_to(target) > 10:
+##		velocity = target - position
+##	if velocity.length() > 0:
+##		velocity = velocity.normalized() * speed
+#	position += velocity * delta
+	position.x = clamp(position.x, 20, screen_size.x - 20)
+	position.y = clamp(position.y, 20, screen_size.y - 20)
 	
 func start(pos):
 	position = pos

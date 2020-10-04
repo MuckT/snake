@@ -35,4 +35,4 @@ texture = ExtResource( 3 )
 shape = SubResource( 1 )
 
 [node name="StartPosition" type="Position2D" parent="Grid/Player"]
-position = Vector2( 240, 250 )
+position = Vector2( 20, 20 )
