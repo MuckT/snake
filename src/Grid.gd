@@ -27,6 +27,7 @@ func _ready():
 	# Create Player
 	$Player.start($Player/StartPosition.position)
 	
+#	TODO make a collectable instance
 #	var position
 #	var placed = false
 #	while not placed:
@@ -70,7 +71,6 @@ func new_game():
 	$StartTimer.start()
 	$Player/Timer.start()
 	
-
 
 func _on_Player_game_over():
 	print("game over") # Replace with function body.

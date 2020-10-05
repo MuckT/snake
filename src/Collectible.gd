@@ -6,12 +6,6 @@ var tile_y = 18
 var Grid
 
 
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	position = position.snapped(Vector2.ONE * tile_size)
@@ -28,19 +22,19 @@ func new_collectible():
 	var new_position = Vector2(randi() % 440, randi() % 690)
 	position = new_position.snapped(Vector2.ONE * tile_size)
 	position += Vector2.ONE * tile_size/2
-	print(position)
+#	print(position)
 	show()
-#	Grid.world_to_map(position)
 	var pos = Grid.world_to_map(position)
-	print(pos)
-#	$CollisionShape2D.set_deferred("disabled",false)
+#	print(pos)
 
 
 func _on_Collectible_area_entered(area):
 	hide()
 	new_collectible()
+#	print("Area id from collectable: ", area)
 #	print("Area name from collectable: ", area.get_parent().name)
+#	TODO place again collectible if on snake
 #	if area.get_parent().name.begins_with("Grid"):
 #		#hide the collectible and then place it somewhere else
-#		score += 1
+#		score -= 1
 
