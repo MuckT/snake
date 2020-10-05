@@ -16,6 +16,8 @@ var grid = []
 
 
 func _ready():
+	if OS.get_name()=="HTML5":
+		OS.set_window_maximized(true)
 	# 1. Create the grid Array
 	for x in range (grid_size.x):
 		grid.append([])
