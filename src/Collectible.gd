@@ -3,6 +3,9 @@ extends Area2D
 var tile_size = 40
 var tile_x = 12
 var tile_y = 18
+var score = 0
+var Grid
+
 
 
 # Declare member variables here. Examples:
@@ -15,6 +18,7 @@ func _ready():
 	position = position.snapped(Vector2.ONE * tile_size)
 	position += Vector2.ONE * tile_size/2
 #	$Grid.grid[position.x][position.y] = 2
+	Grid = get_parent()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -27,6 +31,9 @@ func new_collectible():
 	position += Vector2.ONE * tile_size/2
 	print(position)
 	show()
+#	Grid.world_to_map(position)
+	var pos = Grid.world_to_map(position)
+	print(pos)
 #	$CollisionShape2D.set_deferred("disabled",false)
 
 
@@ -34,4 +41,5 @@ func _on_Collectible_area_entered(area):
 	#hide the collectible and then place it somewhere else
 	hide()
 #	$CollisionShape2D.set_deferred("disabled",true)
+	score += 1
 	new_collectible()

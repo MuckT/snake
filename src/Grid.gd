@@ -4,6 +4,8 @@ var tile_size = get_cell_size()
 var half_tile_size = tile_size / 2
 var tile_y = 18
 var tile_x = 12
+onready var Collectible = get_node("Collectible")
+onready var Player = get_node("Player")
 
 enum ENTITY_TYPE {PLAYER, OBSTACLE, COLLECTIBLE}
 
@@ -21,7 +23,7 @@ func _ready():
 			grid.append([])
 			
 	# 2. **COME BACK TO THIS** Create obstacles 
-	
+
 	# Create Player
 	$Player.start($Player/StartPosition.position)
 	
@@ -62,3 +64,13 @@ func update_child_pos(child):
 	
 	var target_pos = map_to_world(new_grid_pos) + half_tile_size
 	return target_pos
+
+
+func new_game():
+	$StartTimer.start()
+	$Player/Timer.start()
+	
+
+
+func _on_Player_game_over():
+	print("game over") # Replace with function body.

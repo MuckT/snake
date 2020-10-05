@@ -1,7 +1,12 @@
 extends Area2D
 
+signal game_over
+
+onready var tail = preload("res://Tail.tscn")
+
 #signal hit
 var tile_size = 40
+var half_tile_size = tile_size / 2
 var inputs = {
 	"right": Vector2.RIGHT, "left": Vector2.LEFT, 
 	"up": Vector2.UP, "down": Vector2.DOWN
@@ -17,6 +22,10 @@ var current_direction = String()
 var set_direction = String()
 var raw_direction = Vector2()
 var radians = float()
+var Grid
+var last_direction = Vector2(1,0)
+var last_position = Vector2(0,0)
+var gap = 40
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -24,13 +33,51 @@ func _ready():
 	screen_size = get_viewport_rect().size
 	position = position.snapped(Vector2.ONE * tile_size)
 	position += Vector2.ONE * tile_size/2
-	set_direction = 'right'
+#	set_direction = 'right'
+	Grid = get_parent()
+	var inst = tail.instance()
+	var temp_grid_pos = Grid.world_to_map(position)
+	temp_grid_pos.x -= 1
+	inst.position = Grid.map_to_world(temp_grid_pos)
+	#inst.position.x = clamp(position.x, half_tile_size, screen_size.x - half_tile_size)
+	#inst.position.y = clamp(position.y, half_tile_size, screen_size.y - half_tile_size)
+
+	add_child(inst)
+
+
 
 func move(dir):
+	# set dir_change
+	var dir_change = false
+	if last_direction != inputs[dir]:
+		dir_change = true
+	# Hold previous positions to check for game end
+	last_position = position
+	last_direction = inputs[dir]
+	print(dir_change)
+#    print(last_position)
+	# Change position based on direction
+	var head_pos = position
 	position += inputs[dir] * tile_size
+	
+	if dir_change:
+		for i in range (4,get_child_count()):
+			get_child(i).add_to_tail(head_pos, inputs[dir])
+#		var inst = get_child(4)
+#		var temp_grid_pos = Grid.world_to_map(position)
+#		if inputs[dir] == Vector2.RIGHT:
+#			temp_grid_pos.x -= 2
+#		if inputs[dir] == Vector2.DOWN:
+#			temp_grid_pos.y -= 1
+
+#		print(temp_grid_pos)
+#		inst.position = Grid.map_to_world(temp_grid_pos)
+
+	
 	
 # Change direction based on keypress or touche event whenever an event happens.
 func _input(event):
+	#keep track of last direction
 	# Exit feature
 	if Input.is_action_pressed("ui_cancel"):
 		get_tree().quit()
@@ -58,10 +105,12 @@ func _input(event):
 		set_direction = 'left'
 	if Input.is_action_just_pressed("ui_up"):
 		set_direction = 'up'
-		
+	
+
+
 func _process(delta):
-	position.x = clamp(position.x, 20, screen_size.x - 20)
-	position.y = clamp(position.y, 20, screen_size.y - 20)
+	position.x = clamp(position.x, half_tile_size, screen_size.x - half_tile_size)
+	position.y = clamp(position.y, half_tile_size, screen_size.y - half_tile_size)
 	
 func start(pos):
 	position = pos
@@ -80,3 +129,22 @@ func _on_Timer_timeout():
 	if set_direction == 'up' and current_direction != 'down':
 		current_direction = set_direction
 	move(current_direction)
+
+# Attempting my own tail
+func add_tail():
+	var inst = tail.instance()
+	var prev_tail = get_child(get_child_count() -1 )
+	if(prev_tail.name != "head"):
+		inst.cur_dir = prev_tail.cur_dir
+		for i in range(0,prev_tail.pos_array.size()):
+			inst.pos_array.append(prev_tail.pos_array[i])
+			inst.directions.append(prev_tail.directions[i])
+		inst.position = prev_tail.position + prev_tail.cur_dir * gap
+	else:
+		inst.cur_dir = current_direction
+		inst.position = prev_tail.position + current_direction * gap
+	add_child(inst)
+
+
+func _on_Collectible_area_entered(area):
+	add_tail() # Replace with function body.

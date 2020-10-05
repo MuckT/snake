@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://GridVisualizer.gd" type="Script" id=1]
 [ext_resource path="res://Grid.gd" type="Script" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Player.gd" type="Script" id=4]
 [ext_resource path="res://Collectible.gd" type="Script" id=5]
 [ext_resource path="res://Obstacle.png" type="Texture" id=6]
+[ext_resource path="res://HUD.tscn" type="PackedScene" id=7]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 16.0
@@ -18,6 +19,7 @@ radius = 16.0
 [node name="Grid" type="TileMap" parent="."]
 cell_size = Vector2( 40, 40 )
 cell_custom_transform = Transform2D( 40, 0, 0, 40, 0, 0 )
+cell_tile_origin = 1
 format = 1
 script = ExtResource( 2 )
 
@@ -33,7 +35,7 @@ __meta__ = {
 
 [node name="Sprite" type="Sprite" parent="Grid/Player"]
 position = Vector2( 4.76837e-07, 4.76837e-07 )
-scale = Vector2( 0.5, 0.5 )
+scale = Vector2( 0.9, 0.9 )
 texture = ExtResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Grid/Player"]
@@ -43,8 +45,7 @@ shape = SubResource( 1 )
 position = Vector2( 20, 20 )
 
 [node name="Timer" type="Timer" parent="Grid/Player"]
-wait_time = 0.25
-autostart = true
+wait_time = 3.0
 
 [node name="Collectible" type="Area2D" parent="Grid"]
 position = Vector2( 16, 16 )
@@ -62,5 +63,15 @@ shape = SubResource( 2 )
 
 [node name="StartPosition" type="Position2D" parent="Grid/Collectible"]
 position = Vector2( 200, 200 )
+
+[node name="StartTimer" type="Timer" parent="Grid"]
+wait_time = 2.0
+one_shot = true
+
+[node name="HUD" parent="." instance=ExtResource( 7 )]
+[connection signal="game_over" from="Grid/Player" to="Grid" method="_on_Player_game_over"]
 [connection signal="timeout" from="Grid/Player/Timer" to="Grid/Player" method="_on_Timer_timeout"]
+[connection signal="area_entered" from="Grid/Collectible" to="HUD" method="_on_Collectible_area_entered"]
+[connection signal="area_entered" from="Grid/Collectible" to="Grid/Player" method="_on_Collectible_area_entered"]
 [connection signal="area_entered" from="Grid/Collectible" to="Grid/Collectible" method="_on_Collectible_area_entered"]
+[connection signal="start_game" from="HUD" to="Grid" method="new_game"]
