@@ -25,7 +25,7 @@ var radians = float()
 var Grid
 var last_direction = Vector2(1,0)
 var last_position = Vector2(0,0)
-var gap = 40
+var gap = 20
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -33,15 +33,14 @@ func _ready():
 	screen_size = get_viewport_rect().size
 	position = position.snapped(Vector2.ONE * tile_size)
 	position += Vector2.ONE * tile_size/2
-#	set_direction = 'right'
+	set_direction = 'right'
 	Grid = get_parent()
 	var inst = tail.instance()
 	var temp_grid_pos = Grid.world_to_map(position)
-	temp_grid_pos.x -= 1
+#	temp_grid_pos.x -= 1
 	inst.position = Grid.map_to_world(temp_grid_pos)
-	#inst.position.x = clamp(position.x, half_tile_size, screen_size.x - half_tile_size)
-	#inst.position.y = clamp(position.y, half_tile_size, screen_size.y - half_tile_size)
-
+#	#inst.position.x = clamp(position.x, half_tile_size, screen_size.x - half_tile_size)
+#	#inst.position.y = clamp(position.y, half_tile_size, screen_size.y - half_tile_size)
 	add_child(inst)
 
 
@@ -54,15 +53,20 @@ func move(dir):
 	# Hold previous positions to check for game end
 	last_position = position
 	last_direction = inputs[dir]
-	print(dir_change)
+#	print(dir_change)
 #    print(last_position)
 	# Change position based on direction
 	var head_pos = position
+#	if dir_change:
+#		for i in range (4,get_child_count()):
+#			get_child(i).add_to_tail(head_pos, inputs[dir])
+	for i in range(get_child_count() - 1, 4, -1):
+#		print(get_child(i).name)
+		get_child(i).global_position = get_child(i - 1).global_position
+		get_child(i).position -= inputs[dir] * tile_size
+	get_child(4).global_position = global_position
+#		print(i)
 	position += inputs[dir] * tile_size
-	
-	if dir_change:
-		for i in range (4,get_child_count()):
-			get_child(i).add_to_tail(head_pos, inputs[dir])
 #		var inst = get_child(4)
 #		var temp_grid_pos = Grid.world_to_map(position)
 #		if inputs[dir] == Vector2.RIGHT:
@@ -111,6 +115,8 @@ func _input(event):
 func _process(delta):
 	position.x = clamp(position.x, half_tile_size, screen_size.x - half_tile_size)
 	position.y = clamp(position.y, half_tile_size, screen_size.y - half_tile_size)
+	if(last_position == position):
+		print("END GAME")
 	
 func start(pos):
 	position = pos
@@ -129,11 +135,13 @@ func _on_Timer_timeout():
 	if set_direction == 'up' and current_direction != 'down':
 		current_direction = set_direction
 	move(current_direction)
+	
 
 # Attempting my own tail
 func add_tail():
 	var inst = tail.instance()
-	var prev_tail = get_child(get_child_count() -1 )
+	var prev_tail = get_child(get_child_count() -1 ) 
+#	print(prev_tail.name)
 	if(prev_tail.name != "head"):
 		inst.cur_dir = prev_tail.cur_dir
 		for i in range(0,prev_tail.pos_array.size()):
@@ -147,4 +155,7 @@ func add_tail():
 
 
 func _on_Collectible_area_entered(area):
-	add_tail() # Replace with function body.
+	if area.get_parent().name.begins_with("Grid"):
+		print("Add Tail")
+		add_tail()
+	print("Collide: ", area.get_parent().name)

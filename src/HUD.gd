@@ -19,7 +19,8 @@ signal start_game
 
 
 func _on_Collectible_area_entered(area):
-	score += 1
+	if area.get_parent().name.begins_with("Grid"):
+		score += 1
 	$ScoreLabel.text = str(score) 
 
 

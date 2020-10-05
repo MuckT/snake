@@ -3,7 +3,6 @@ extends Area2D
 var tile_size = 40
 var tile_x = 12
 var tile_y = 18
-var score = 0
 var Grid
 
 
@@ -38,8 +37,10 @@ func new_collectible():
 
 
 func _on_Collectible_area_entered(area):
-	#hide the collectible and then place it somewhere else
 	hide()
-#	$CollisionShape2D.set_deferred("disabled",true)
-	score += 1
 	new_collectible()
+#	print("Area name from collectable: ", area.get_parent().name)
+#	if area.get_parent().name.begins_with("Grid"):
+#		#hide the collectible and then place it somewhere else
+#		score += 1
+
