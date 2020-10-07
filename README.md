@@ -1,2 +1,2 @@
-# snake
-simple snake game
+# snek
+simple snek game
